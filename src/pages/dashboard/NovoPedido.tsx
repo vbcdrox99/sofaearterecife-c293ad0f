@@ -1740,6 +1740,8 @@ Você deve recusar a entrega e descrever o motivo no verso do pedido nos seguint
           tipoPe: '',
           frete: '',
           precoUnitario: '',
+          descontoTipo: 'percentage',
+          descontoValor: '',
           valorTotal: '',
           valorPago: '',
           formaPagamento: '',
@@ -1753,7 +1755,9 @@ Você deve recusar a entrega e descrever o motivo no verso do pedido nos seguint
           fotosPedido: [],
           fotosControle: [],
           visitaTecnicaAtiva: false,
-          visitaTecnicaData: ''
+          visitaTecnicaData: '',
+          pedidoDescontoTipo: 'percentage',
+          pedidoDescontoValor: '',
         });
         setClienteSelecionado(null);
         setEtapasSelecionadas([]);

@@ -81,12 +81,13 @@ export const usePedidos = () => {
 
   const criarPedido = async (dadosPedido: NovoPedidoData) => {
     try {
+      const userId = (await supabase.auth.getUser()).data.user?.id;
       const { data, error } = await supabase
         .from('pedidos')
         .insert([{
           ...dadosPedido,
-          created_by: (await supabase.auth.getUser()).data.user?.id,
-        }])
+          created_by: userId,
+        } as any])
         .select()
         .single();
 

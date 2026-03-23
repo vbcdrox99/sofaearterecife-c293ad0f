@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { pedidosService, type Pedido } from '@/lib/supabase';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Interface movida para supabase.ts
 
@@ -21,7 +22,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 const Pedidos = () => {
   const { toast } = useToast();
-  const { selectedStore } = (await import('@/contexts/AuthContext')).useAuth();
+  const { selectedStore } = useAuth();
   const navigate = useNavigate();
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState(true);
