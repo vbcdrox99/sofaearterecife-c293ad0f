@@ -80,23 +80,27 @@ export const usePedidos = () => {
 
   const criarPedido = async (dadosPedido: NovoPedidoData) => {
     try {
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      const { data: numData } = await supabase.rpc('get_next_order_number', { p_loja: selectedStore || 'loja_1' });
+      
       const { data, error } = await supabase
         .from('pedidos')
         .insert([{
           ...dadosPedido,
-          created_by: (await supabase.auth.getUser()).data.user?.id,
+          numero_pedido: numData || 1,
+          created_by: userId!,
         }])
         .select()
         .single();
 
       if (error) throw error;
 
-      setPedidos(prev => [data, ...prev]);
+      setPedidos(prev => [data as any, ...prev]);
       
       // Criar etapas de produção para o novo pedido
-      const etapas: Array<'estrutura' | 'estofamento' | 'acabamento'> = ['estrutura', 'estofamento', 'acabamento'];
+      const etapas = ['marcenaria', 'corte_costura', 'espuma', 'bancada', 'tecido'];
       const { error: etapasError } = await supabase
-        .from('producao_etapas')
+        .from('producao_etapas' as any)
         .insert(
           etapas.map(etapa => ({
             pedido_id: data.id,
