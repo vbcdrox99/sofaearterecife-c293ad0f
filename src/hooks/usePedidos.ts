@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export interface Pedido {
   id: string;
   numero_pedido: number;
-  loja: 'loja_1' | 'loja_2';
+  loja: 'loja_1' | 'loja_2' | 'todas';
   cliente_nome: string;
   cliente_telefone: string;
   cliente_endereco?: string;
@@ -14,11 +14,12 @@ export interface Pedido {
   descricao_sofa: string;
   observacoes?: string;
   valor_total?: number;
-  status: 'aguardando_producao' | 'em_producao' | 'finalizado' | 'em_entrega' | 'entregue';
+  status: 'pendente' | 'em_producao' | 'concluido' | 'entregue';
   data_previsao_entrega?: string;
   created_by: string;
   created_at: string;
   updated_at: string;
+  forma_pagamento?: string;
   // Campos do produto
   tipo_sofa?: string;
   tipo_servico?: string;
@@ -28,6 +29,7 @@ export interface Pedido {
   tecido?: string;
   tipo_pe?: string;
   braco?: string;
+  [key: string]: any;
 }
 
 export interface NovoPedidoData {
