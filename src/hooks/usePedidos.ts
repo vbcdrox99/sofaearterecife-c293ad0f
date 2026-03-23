@@ -95,7 +95,7 @@ export const usePedidos = () => {
       setPedidos(prev => [data, ...prev]);
       
       // Criar etapas de produção para o novo pedido
-      const etapas: Array<'estrutura' | 'estofamento' | 'acabamento'> = ['estrutura', 'estofamento', 'acabamento'];
+      const etapas: Array<'marcenaria' | 'corte_costura' | 'espuma' | 'bancada' | 'tecido'> = ['marcenaria', 'corte_costura', 'espuma', 'bancada', 'tecido'];
       const { error: etapasError } = await supabase
         .from('producao_etapas')
         .insert(
