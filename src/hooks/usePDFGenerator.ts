@@ -1495,12 +1495,15 @@ export const usePDFGenerator = () => {
   `;
 
   const doPrint = useReactToPrint({
+    // Compat: novas versões usam contentRef; mantemos content como fallback
+    content: () => printRef.current,
+    // @ts-expect-error contentRef pode não existir em tipos da versão instalada
     contentRef: printRef,
     documentTitle: titleRef.current,
     pageStyle,
     onBeforeGetContent: () => setIsPrinting(true),
     onAfterPrint: () => setIsPrinting(false),
-  } as any);
+  });
 
   const printCurrentView = (title?: string) => {
     if (title) titleRef.current = title;
