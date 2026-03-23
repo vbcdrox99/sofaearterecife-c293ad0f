@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
-import Sidebar from './Sidebar';
+import Sidebar from '@/components/dashboard/Sidebar';
 
 // Mock do contexto de autenticação
 vi.mock('@/contexts/AuthContext', () => ({

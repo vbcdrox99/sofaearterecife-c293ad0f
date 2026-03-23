@@ -1753,6 +1753,10 @@ Você deve recusar a entrega e descrever o motivo no verso do pedido nos seguint
           fotosPedido: [],
           fotosControle: [],
           visitaTecnicaAtiva: false,
+          descontoTipo: 'percentage',
+          descontoValor: '',
+          pedidoDescontoTipo: 'percentage',
+          pedidoDescontoValor: '',
           visitaTecnicaData: ''
         });
         setClienteSelecionado(null);
