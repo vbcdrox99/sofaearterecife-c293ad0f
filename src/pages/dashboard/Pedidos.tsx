@@ -249,7 +249,7 @@ const Pedidos = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                R$ {pedidos.reduce((acc, p) => acc + p.valorTotal, 0).toLocaleString('pt-BR')}
+                R$ {pedidos.reduce((acc, p) => acc + (p.valor_total || 0), 0).toLocaleString('pt-BR')}
               </div>
               <p className="text-xs text-muted-foreground">Em pedidos ativos</p>
             </CardContent>

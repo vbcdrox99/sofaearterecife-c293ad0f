@@ -164,25 +164,23 @@ export const usePedidos = () => {
   };
 
   const getStatusLabel = (status: Pedido['status']) => {
-    const labels = {
-      aguardando_producao: 'Aguardando Produção',
+    const labels: Record<string, string> = {
+      pendente: 'Pendente',
       em_producao: 'Em Produção',
-      finalizado: 'Finalizado',
-      em_entrega: 'Em Entrega',
+      concluido: 'Concluído',
       entregue: 'Entregue',
     };
-    return labels[status];
+    return labels[status] || status;
   };
 
   const getStatusColor = (status: Pedido['status']) => {
-    const colors = {
-      aguardando_producao: 'bg-yellow-500',
+    const colors: Record<string, string> = {
+      pendente: 'bg-yellow-500',
       em_producao: 'bg-blue-500',
-      finalizado: 'bg-green-500',
-      em_entrega: 'bg-purple-500',
+      concluido: 'bg-green-500',
       entregue: 'bg-gray-500',
     };
-    return colors[status];
+    return colors[status] || 'bg-gray-500';
   };
 
   const contarPorStatus = () => {
