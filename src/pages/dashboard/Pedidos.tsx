@@ -21,7 +21,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 const Pedidos = () => {
   const { toast } = useToast();
-  const { selectedStore } = useAuth();
+  const { selectedStore } = (await import('@/contexts/AuthContext')).useAuth();
   const navigate = useNavigate();
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState(true);
