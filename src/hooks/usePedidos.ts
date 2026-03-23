@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export interface Pedido {
   id: string;
   numero_pedido: number;
-  loja: 'loja_1' | 'loja_2';
+  loja: 'loja_1' | 'loja_2' | 'todas';
   cliente_nome: string;
   cliente_telefone: string;
   cliente_endereco?: string;
@@ -14,11 +14,12 @@ export interface Pedido {
   descricao_sofa: string;
   observacoes?: string;
   valor_total?: number;
-  status: 'aguardando_producao' | 'em_producao' | 'finalizado' | 'em_entrega' | 'entregue';
+  status: 'pendente' | 'em_producao' | 'concluido' | 'entregue';
   data_previsao_entrega?: string;
   created_by: string;
   created_at: string;
   updated_at: string;
+  forma_pagamento?: string;
   // Campos do produto
   tipo_sofa?: string;
   tipo_servico?: string;
@@ -28,6 +29,7 @@ export interface Pedido {
   tecido?: string;
   tipo_pe?: string;
   braco?: string;
+  [key: string]: any;
 }
 
 export interface NovoPedidoData {
@@ -79,12 +81,13 @@ export const usePedidos = () => {
 
   const criarPedido = async (dadosPedido: NovoPedidoData) => {
     try {
+      const userId = (await supabase.auth.getUser()).data.user?.id;
       const { data, error } = await supabase
         .from('pedidos')
         .insert([{
           ...dadosPedido,
-          created_by: (await supabase.auth.getUser()).data.user?.id,
-        }])
+          created_by: userId,
+        } as any])
         .select()
         .single();
 
@@ -93,7 +96,7 @@ export const usePedidos = () => {
       setPedidos(prev => [data, ...prev]);
       
       // Criar etapas de produção para o novo pedido
-      const etapas: Array<'estrutura' | 'estofamento' | 'acabamento'> = ['estrutura', 'estofamento', 'acabamento'];
+      const etapas: Array<'marcenaria' | 'corte_costura' | 'espuma' | 'bancada' | 'tecido'> = ['marcenaria', 'corte_costura', 'espuma', 'bancada', 'tecido'];
       const { error: etapasError } = await supabase
         .from('producao_etapas')
         .insert(
@@ -129,7 +132,7 @@ export const usePedidos = () => {
     try {
       const { data, error } = await supabase
         .from('pedidos')
-        .update({ status: novoStatus })
+        .update({ status: novoStatus as any })
         .eq('id', pedidoId)
         .select()
         .single();
@@ -162,25 +165,23 @@ export const usePedidos = () => {
   };
 
   const getStatusLabel = (status: Pedido['status']) => {
-    const labels = {
-      aguardando_producao: 'Aguardando Produção',
+    const labels: Record<string, string> = {
+      pendente: 'Pendente',
       em_producao: 'Em Produção',
-      finalizado: 'Finalizado',
-      em_entrega: 'Em Entrega',
+      concluido: 'Concluído',
       entregue: 'Entregue',
     };
-    return labels[status];
+    return labels[status] || status;
   };
 
   const getStatusColor = (status: Pedido['status']) => {
-    const colors = {
-      aguardando_producao: 'bg-yellow-500',
+    const colors: Record<string, string> = {
+      pendente: 'bg-yellow-500',
       em_producao: 'bg-blue-500',
-      finalizado: 'bg-green-500',
-      em_entrega: 'bg-purple-500',
+      concluido: 'bg-green-500',
       entregue: 'bg-gray-500',
     };
-    return colors[status];
+    return colors[status] || 'bg-gray-500';
   };
 
   const contarPorStatus = () => {
