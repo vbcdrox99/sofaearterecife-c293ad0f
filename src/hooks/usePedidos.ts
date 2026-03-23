@@ -130,11 +130,11 @@ export const usePedidos = () => {
     }
   };
 
-  const atualizarStatusPedido = async (pedidoId: string, novoStatus: Pedido['status']) => {
+  const atualizarStatusPedido = async (pedidoId: string, novoStatus: string) => {
     try {
       const { data, error } = await supabase
         .from('pedidos')
-        .update({ status: novoStatus })
+        .update({ status: novoStatus as any })
         .eq('id', pedidoId)
         .select()
         .single();

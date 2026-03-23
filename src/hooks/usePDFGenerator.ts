@@ -1495,13 +1495,12 @@ export const usePDFGenerator = () => {
   `;
 
   const doPrint = useReactToPrint({
-    // Compat: novas versões usam contentRef; mantemos content como fallback
     contentRef: printRef,
     documentTitle: titleRef.current,
     pageStyle,
-    onBeforeGetContent: () => setIsPrinting(true),
+    onBeforePrint: async () => { setIsPrinting(true); },
     onAfterPrint: () => setIsPrinting(false),
-  });
+  } as any);
 
   const printCurrentView = (title?: string) => {
     if (title) titleRef.current = title;
