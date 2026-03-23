@@ -131,7 +131,7 @@ export const usePedidos = () => {
     try {
       const { data, error } = await supabase
         .from('pedidos')
-        .update({ status: novoStatus })
+        .update({ status: novoStatus as any })
         .eq('id', pedidoId)
         .select()
         .single();
