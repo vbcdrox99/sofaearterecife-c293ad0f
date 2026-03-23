@@ -43,6 +43,7 @@ export type Database = {
           bairro: string | null
           cep: string | null
           cidade: string | null
+          cpf_cnpj: string | null
           created_at: string | null
           email: string | null
           endereco_completo: string | null
@@ -50,12 +51,14 @@ export type Database = {
           id: string
           nome: string
           telefone: string
+          telefone2: string | null
           updated_at: string | null
         }
         Insert: {
           bairro?: string | null
           cep?: string | null
           cidade?: string | null
+          cpf_cnpj?: string | null
           created_at?: string | null
           email?: string | null
           endereco_completo?: string | null
@@ -63,12 +66,14 @@ export type Database = {
           id?: string
           nome: string
           telefone: string
+          telefone2?: string | null
           updated_at?: string | null
         }
         Update: {
           bairro?: string | null
           cep?: string | null
           cidade?: string | null
+          cpf_cnpj?: string | null
           created_at?: string | null
           email?: string | null
           endereco_completo?: string | null
@@ -76,6 +81,7 @@ export type Database = {
           id?: string
           nome?: string
           telefone?: string
+          telefone2?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -90,6 +96,7 @@ export type Database = {
           id: string
           observacoes: string | null
           pedido_id: string
+          pedido_item_id: string | null
           responsavel_id: string | null
           status: Database["public"]["Enums"]["status_producao"]
           status_etapa: string | null
@@ -105,6 +112,7 @@ export type Database = {
           id?: string
           observacoes?: string | null
           pedido_id: string
+          pedido_item_id?: string | null
           responsavel_id?: string | null
           status?: Database["public"]["Enums"]["status_producao"]
           status_etapa?: string | null
@@ -120,6 +128,7 @@ export type Database = {
           id?: string
           observacoes?: string | null
           pedido_id?: string
+          pedido_item_id?: string | null
           responsavel_id?: string | null
           status?: Database["public"]["Enums"]["status_producao"]
           status_etapa?: string | null
@@ -132,6 +141,13 @@ export type Database = {
             columns: ["pedido_id"]
             isOneToOne: false
             referencedRelation: "pedidos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itens_producao_pedido_item_id_fkey"
+            columns: ["pedido_item_id"]
+            isOneToOne: false
+            referencedRelation: "pedido_itens"
             referencedColumns: ["id"]
           },
         ]
@@ -179,6 +195,8 @@ export type Database = {
           id: string
           nome_arquivo: string
           pedido_id: string
+          pedido_item_id: string | null
+          tamanho_arquivo: number | null
           tipo_arquivo: string
           uploaded_by: string
           url_arquivo: string
@@ -189,6 +207,8 @@ export type Database = {
           id?: string
           nome_arquivo: string
           pedido_id: string
+          pedido_item_id?: string | null
+          tamanho_arquivo?: number | null
           tipo_arquivo: string
           uploaded_by: string
           url_arquivo: string
@@ -199,6 +219,8 @@ export type Database = {
           id?: string
           nome_arquivo?: string
           pedido_id?: string
+          pedido_item_id?: string | null
+          tamanho_arquivo?: number | null
           tipo_arquivo?: string
           uploaded_by?: string
           url_arquivo?: string
@@ -211,61 +233,80 @@ export type Database = {
             referencedRelation: "pedidos"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "pedido_anexos_pedido_item_id_fkey"
+            columns: ["pedido_item_id"]
+            isOneToOne: false
+            referencedRelation: "pedido_itens"
+            referencedColumns: ["id"]
+          },
         ]
       }
       pedido_itens: {
         Row: {
-          braco: string | null
-          cor: string | null
+          braco: string
+          cor: string
           created_at: string
+          created_by: string | null
           data_visita_tecnica: string | null
+          desconto_tipo: string | null
+          desconto_valor: number | null
           descricao: string | null
           dimensoes: string | null
-          espuma: string | null
+          espuma: string
           id: string
           observacoes: string | null
           pedido_id: string
           preco_unitario: number | null
-          tecido: string | null
-          tipo_pe: string | null
-          tipo_servico: string | null
-          tipo_sofa: string | null
+          sequencia: number
+          tecido: string
+          tipo_pe: string
+          tipo_servico: string
+          tipo_sofa: string
           visita_tecnica: boolean | null
         }
         Insert: {
-          braco?: string | null
-          cor?: string | null
+          braco: string
+          cor: string
           created_at?: string
+          created_by?: string | null
           data_visita_tecnica?: string | null
+          desconto_tipo?: string | null
+          desconto_valor?: number | null
           descricao?: string | null
           dimensoes?: string | null
-          espuma?: string | null
+          espuma: string
           id?: string
           observacoes?: string | null
           pedido_id: string
           preco_unitario?: number | null
-          tecido?: string | null
-          tipo_pe?: string | null
-          tipo_servico?: string | null
-          tipo_sofa?: string | null
+          sequencia?: number
+          tecido: string
+          tipo_pe: string
+          tipo_servico: string
+          tipo_sofa: string
           visita_tecnica?: boolean | null
         }
         Update: {
-          braco?: string | null
-          cor?: string | null
+          braco?: string
+          cor?: string
           created_at?: string
+          created_by?: string | null
           data_visita_tecnica?: string | null
+          desconto_tipo?: string | null
+          desconto_valor?: number | null
           descricao?: string | null
           dimensoes?: string | null
-          espuma?: string | null
+          espuma?: string
           id?: string
           observacoes?: string | null
           pedido_id?: string
           preco_unitario?: number | null
-          tecido?: string | null
-          tipo_pe?: string | null
-          tipo_servico?: string | null
-          tipo_sofa?: string | null
+          sequencia?: number
+          tecido?: string
+          tipo_pe?: string
+          tipo_servico?: string
+          tipo_sofa?: string
           visita_tecnica?: boolean | null
         }
         Relationships: [
@@ -333,10 +374,13 @@ export type Database = {
           created_at: string
           created_by: string
           data_previsao_entrega: string | null
+          desconto_tipo: string | null
+          desconto_valor: number | null
           descricao_sofa: string
           dimensoes: string | null
           espuma: string | null
           etapas_necessarias: string[] | null
+          forma_pagamento: string | null
           frete: number | null
           garantia_texto: string | null
           garantia_tipo: string | null
@@ -373,10 +417,13 @@ export type Database = {
           created_at?: string
           created_by: string
           data_previsao_entrega?: string | null
+          desconto_tipo?: string | null
+          desconto_valor?: number | null
           descricao_sofa: string
           dimensoes?: string | null
           espuma?: string | null
           etapas_necessarias?: string[] | null
+          forma_pagamento?: string | null
           frete?: number | null
           garantia_texto?: string | null
           garantia_tipo?: string | null
@@ -384,7 +431,7 @@ export type Database = {
           id?: string
           loja?: Database["public"]["Enums"]["app_store"]
           meios_pagamento?: string[] | null
-          numero_pedido?: number
+          numero_pedido: number
           observacoes?: string | null
           preco_unitario?: number | null
           prioridade?: string | null
@@ -413,10 +460,13 @@ export type Database = {
           created_at?: string
           created_by?: string
           data_previsao_entrega?: string | null
+          desconto_tipo?: string | null
+          desconto_valor?: number | null
           descricao_sofa?: string
           dimensoes?: string | null
           espuma?: string | null
           etapas_necessarias?: string[] | null
+          forma_pagamento?: string | null
           frete?: number | null
           garantia_texto?: string | null
           garantia_tipo?: string | null
@@ -447,6 +497,13 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: false
+            referencedRelation: "vendedores"
             referencedColumns: ["id"]
           },
         ]
@@ -501,6 +558,7 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          email: string | null
           id: string
           nome_completo: string
           role: Database["public"]["Enums"]["app_role"]
@@ -512,6 +570,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          email?: string | null
           id?: string
           nome_completo: string
           role?: Database["public"]["Enums"]["app_role"]
@@ -523,6 +582,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          email?: string | null
           id?: string
           nome_completo?: string
           role?: Database["public"]["Enums"]["app_role"]
@@ -536,19 +596,19 @@ export type Database = {
       }
       vendedores: {
         Row: {
-          created_at: string
+          created_at: string | null
           id: string
           nome: string
           updated_at: string | null
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           id?: string
           nome: string
           updated_at?: string | null
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
           id?: string
           nome?: string
           updated_at?: string | null
@@ -560,21 +620,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_admin: {
-        Args: { _user_id: string }
-        Returns: boolean
-      }
+      get_next_order_number: { Args: { p_loja: string }; Returns: number }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "gerente" | "funcionario"
+      app_sector:
+        | "geral"
+        | "marcenaria"
+        | "corte_costura"
+        | "espuma"
+        | "bancada"
+        | "tecido"
       app_store: "loja_1" | "loja_2" | "todas"
-      app_sector: "geral" | "marcenaria" | "corte_costura" | "espuma" | "bancada" | "tecido"
       etapa_producao:
-      | "marcenaria"
-      | "corte_costura"
-      | "espuma"
-      | "bancada"
-      | "tecido"
+        | "marcenaria"
+        | "corte_costura"
+        | "espuma"
+        | "bancada"
+        | "tecido"
       status_pedido: "pendente" | "em_producao" | "concluido" | "entregue"
       status_producao: "pendente" | "iniciado" | "supervisao" | "finalizado"
       tipo_usuario: "admin" | "funcionario"
@@ -591,123 +655,130 @@ type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-  | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-  : never = never,
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
-  ? R
-  : never
+    ? R
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-    DefaultSchema["Views"])
-  ? (DefaultSchema["Tables"] &
-    DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-      Row: infer R
-    }
-  ? R
-  : never
-  : never
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-  | keyof DefaultSchema["Tables"]
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-  : never = never,
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-    Insert: infer I
-  }
-  ? I
-  : never
+      Insert: infer I
+    }
+    ? I
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-    Insert: infer I
-  }
-  ? I
-  : never
-  : never
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-  | keyof DefaultSchema["Tables"]
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-  : never = never,
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-    Update: infer U
-  }
-  ? U
-  : never
+      Update: infer U
+    }
+    ? U
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-    Update: infer U
-  }
-  ? U
-  : never
-  : never
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-  | keyof DefaultSchema["Enums"]
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-  : never = never,
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-  : never
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-  | keyof DefaultSchema["CompositeTypes"]
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-  : never = never,
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-  : never
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
 
 export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "gerente", "funcionario"],
-      app_store: ["loja_1", "loja_2"],
-      app_sector: ["geral", "marcenaria", "corte_costura", "espuma", "bancada", "tecido"],
+      app_sector: [
+        "geral",
+        "marcenaria",
+        "corte_costura",
+        "espuma",
+        "bancada",
+        "tecido",
+      ],
+      app_store: ["loja_1", "loja_2", "todas"],
       etapa_producao: [
         "marcenaria",
         "corte_costura",
@@ -721,10 +792,3 @@ export const Constants = {
     },
   },
 } as const
-
-// Tipos auxiliares para facilitar o uso
-export type StatusProducao = Database["public"]["Enums"]["status_producao"]
-// Augment ItemProducao to include optional pedido_item_id until types are regenerated
-export type ItemProducao = Tables<"itens_producao"> & { pedido_item_id?: string | null }
-export type ItemProducaoInsert = TablesInsert<"itens_producao">
-export type ItemProducaoUpdate = TablesUpdate<"itens_producao">
