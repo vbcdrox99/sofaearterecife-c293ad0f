@@ -37,6 +37,7 @@ export interface Pedido {
 export interface ItemProducao {
   id?: string;
   pedido_id: string;
+  pedido_item_id?: string | null;
   etapa: 'marcenaria' | 'corte_costura' | 'espuma' | 'bancada' | 'tecido';
   concluida: boolean;
   status?: StatusProducao;
@@ -59,6 +60,7 @@ export interface ItemProducao {
     tecido?: string;
     tipo_pe?: string;
     braco?: string;
+    etapas_necessarias?: string[];
   };
 }
 

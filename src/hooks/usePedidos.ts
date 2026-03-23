@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export interface Pedido {
   id: string;
   numero_pedido: number;
-  loja: 'loja_1' | 'loja_2';
+  loja: string;
   cliente_nome: string;
   cliente_telefone: string;
   cliente_endereco?: string;
@@ -14,12 +14,11 @@ export interface Pedido {
   descricao_sofa: string;
   observacoes?: string;
   valor_total?: number;
-  status: 'aguardando_producao' | 'em_producao' | 'finalizado' | 'em_entrega' | 'entregue';
+  status: string;
   data_previsao_entrega?: string;
   created_by: string;
   created_at: string;
   updated_at: string;
-  // Campos do produto
   tipo_sofa?: string;
   tipo_servico?: string;
   cor?: string;
@@ -28,6 +27,8 @@ export interface Pedido {
   tecido?: string;
   tipo_pe?: string;
   braco?: string;
+  forma_pagamento?: string;
+  [key: string]: any;
 }
 
 export interface NovoPedidoData {
@@ -79,23 +80,27 @@ export const usePedidos = () => {
 
   const criarPedido = async (dadosPedido: NovoPedidoData) => {
     try {
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      const { data: numData } = await supabase.rpc('get_next_order_number', { p_loja: selectedStore || 'loja_1' });
+      
       const { data, error } = await supabase
         .from('pedidos')
         .insert([{
           ...dadosPedido,
-          created_by: (await supabase.auth.getUser()).data.user?.id,
+          numero_pedido: numData || 1,
+          created_by: userId!,
         }])
         .select()
         .single();
 
       if (error) throw error;
 
-      setPedidos(prev => [data, ...prev]);
+      setPedidos(prev => [data as any, ...prev]);
       
       // Criar etapas de produção para o novo pedido
-      const etapas: Array<'estrutura' | 'estofamento' | 'acabamento'> = ['estrutura', 'estofamento', 'acabamento'];
+      const etapas = ['marcenaria', 'corte_costura', 'espuma', 'bancada', 'tecido'];
       const { error: etapasError } = await supabase
-        .from('producao_etapas')
+        .from('producao_etapas' as any)
         .insert(
           etapas.map(etapa => ({
             pedido_id: data.id,
@@ -125,11 +130,11 @@ export const usePedidos = () => {
     }
   };
 
-  const atualizarStatusPedido = async (pedidoId: string, novoStatus: Pedido['status']) => {
+  const atualizarStatusPedido = async (pedidoId: string, novoStatus: string) => {
     try {
       const { data, error } = await supabase
         .from('pedidos')
-        .update({ status: novoStatus })
+        .update({ status: novoStatus as any })
         .eq('id', pedidoId)
         .select()
         .single();

@@ -495,7 +495,7 @@ Você deve recusar a entrega e descrever o motivo no verso do pedido nos seguint
                 braco: it.braco || '',
                 tipoPe: it.tipo_pe || '',
                 precoUnitario: it.preco_unitario != null ? String(it.preco_unitario) : '',
-                descontoTipo: 'percentage',
+                descontoTipo: 'percentage' as const,
                 descontoValor: 0,
                 fotosPedido: [],
                 etapasNecessarias: []
@@ -1753,6 +1753,10 @@ Você deve recusar a entrega e descrever o motivo no verso do pedido nos seguint
           fotosPedido: [],
           fotosControle: [],
           visitaTecnicaAtiva: false,
+          descontoTipo: 'percentage',
+          descontoValor: '',
+          pedidoDescontoTipo: 'percentage',
+          pedidoDescontoValor: '',
           visitaTecnicaData: ''
         });
         setClienteSelecionado(null);
